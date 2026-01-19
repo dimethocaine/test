@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choco Vault</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+html { scroll-behavior: smooth; }
+body { 
+  margin:0; 
+  position: relative; 
+  overflow-x: hidden; 
+  font-family: 'Montserrat', sans-serif; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  text-align: center;
+  background: linear-gradient(to bottom right, #0a0a15, #1a1a2e, #000);
+}
+
+.glow-title { 
+  font-weight:bold; 
+  display: inline-block;
+  animation: floatText 6s ease-in-out infinite;
+}
+.glow-title .pink { 
+  color:#ec92bd; 
+  text-shadow: 
+    0 0 12px rgba(236,146,189,0.6), 
+    0 0 30px rgba(236,146,189,0.25), 
+    0 0 60px rgba(236,146,189,0.1);
+}
+.glow-title .white { 
+  color:#fff; 
+  text-shadow: 
+    0 0 12px rgba(255,255,255,0.6), 
+    0 0 30px rgba(255,255,255,0.25), 
+    0 0 60px rgba(255,255,255,0.1);
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.discord-glow {
+  background-color:#5865F2; 
+  color: #fff;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0.75rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+  box-shadow: 0 0 14px rgba(88,101,242,.6), 0 0 32px rgba(88,101,242,.45);
+  display: inline-block;
+}
+.discord-glow:hover {
+  transform: translateY(-4px) scale(1.05) rotate(-1deg);
+  box-shadow: 0 0 24px rgba(88,101,242,.7), 0 0 48px rgba(88,101,242,.55);
+  filter: brightness(1.1);
+}
+
+#snowCanvas {
+  position: fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events: none;
+  z-index:0;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 12px 0;
+  position: absolute;
+  bottom: 12px;
+  font-size: 0.85rem;
+  color: #9ca3af; 
+}
+footer a {
+  color: #4ea3ff; 
+  text-decoration: none;
+  text-shadow: 0 0 6px rgba(78,163,255,0.7);
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+footer a:hover {
+  color: #86c5ff;
+  text-shadow: 0 0 12px rgba(78,163,255,1);
+}
+
+.fade-up { animation: fadeUp .6s ease forwards; }
+@keyframes fadeUp { from { opacity:0; transform: translateY(16px);} to {opacity:1; transform:none; } }
+</style>
+</head>
+<body>
+
+<canvas id="snowCanvas"></canvas>
+
+<header class="fade-up">
+  <h1 class="text-5xl md:text-7xl tracking-tight glow-title">
+    <span class="pink">Choco</span> <span class="white">Vault</span>
+  </h1>
+  <div class="mt-6 fade-up">
+    <a href="https://discord.gg/R36y65ncY8" target="_blank" class="discord-glow">
+      Join Discord
+    </a>
+  </div>
+</header>
+
+<footer>
+  Designed by <a href="https://discord.com/users/1313166452911771690" target="_blank">@dimethocaine</a>
+</footer>
+
+<script>
+
+const canvas = document.getElementById('snowCanvas');
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+const orbs = [];
+
+function createOrbs(num) {
+  for(let i=0; i<num; i++){
+    orbs.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random()*3 + 1.5,
+      speed: Math.random()*0.5 + 0.2,
+      opacity: Math.random()*0.5 + 0.2
+    });
+  }
+}
+
+function drawOrbs(){
+  ctx.clearRect(0,0,width,height);
+  orbs.forEach(o => {
+    ctx.beginPath();
+    ctx.arc(o.x, o.y, o.radius, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,255,255,${o.opacity})`;
+    ctx.shadowColor = `rgba(255,255,255,0.6)`;
+    ctx.shadowBlur = 4;
+    ctx.fill();
+    o.y += o.speed;
+    if(o.y > height) { o.y = -o.radius; o.x = Math.random() * width; }
+  });
+  requestAnimationFrame(drawOrbs);
+}
+
+window.addEventListener('resize', () => {
+  width = canvas.width = window.innerWidth;
+  height = canvas.height = window.innerHeight;
+});
+
+createOrbs(100);
+drawOrbs();
+</script>
+</body>
+</html>
